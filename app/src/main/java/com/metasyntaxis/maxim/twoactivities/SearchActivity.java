@@ -38,11 +38,12 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
     final String LOG_TAG = "dbLogs";
     final Random rnd = new Random();
-    Button btnSearch, btnTest, btnReload;
+    Button btnSearch, btnWorks, btnReload;
     EditText txtAuthor, txtName, txtLimit;
     DB db;
     RequestQueue queue;
-    StringRequest stringRequest;
+    StringRequest stringRequest, stringRequestW;
+    String url, urlW;
     //JsonObjectRequest jsonObjectRequest;
 
     @Override
@@ -52,8 +53,8 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
         btnSearch = (Button) findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(this);
-        btnTest = (Button) findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(this);
+        btnWorks = (Button) findViewById(R.id.btnWorks);
+        btnWorks.setOnClickListener(this);
         btnReload = (Button) findViewById(R.id.btnReload);
         btnReload.setOnClickListener(this);
 
@@ -68,8 +69,8 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
         queue = Volley.newRequestQueue(this);
 
-        String url = getResources().getString(R.string.url_get_info_json); //"http://www.homelibr.ru/andr/";
-
+        url = getResources().getString(R.string.url_get_info_json); //"http://www.homelibr.ru/andr/";
+        urlW = getResources().getString(R.string.url_get_info_work_json);
 //        jsonObjectRequest = new JsonObjectRequest
 //                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 //
@@ -89,15 +90,33 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 //                });
 
         stringRequest = new StringRequest(Request.Method.GET, url,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    String s = db.updateAllFromJSON(response.toString());
-                    Toast toast = Toast.makeText(SearchActivity.this,
-                            s, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }, new Response.ErrorListener() {
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String s = db.updateAllFromJSON(response.toString());
+                        Toast toast = Toast.makeText(SearchActivity.this,
+                                s, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast toast = Toast.makeText(SearchActivity.this,
+                        error.getMessage(), Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
+        stringRequestW = new StringRequest(Request.Method.GET, urlW,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String s = db.updateAllWorksFromJSON(response.toString());
+                        Toast toast = Toast.makeText(SearchActivity.this,
+                                s, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast toast = Toast.makeText(SearchActivity.this,
@@ -117,10 +136,11 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                 Intent intent = ResultActivity.newIntent(SearchActivity.this, strData);
                 startActivity(intent);
                 break;
-            case R.id.btnTest:
-                Book ob = new Book("Автор" + rnd.nextInt(), "Наименование" + rnd.nextInt(), 0);
-                long rowID = db.insertBook(ob);
+            case R.id.btnWorks:
+                //Book ob = new Book("Автор" + rnd.nextInt(), "Наименование" + rnd.nextInt(), 0);
+                //long rowID = db.insertBook(ob);
                 //Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+                queue.add(stringRequestW);
 
                 break;
             case R.id.btnReload:

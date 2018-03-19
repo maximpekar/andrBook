@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">TwoActivities</string>
-    <string name="btn_search_text">Поиск книг</string>
-    <string name="btn_test_text">Тест добавить</string>
-    <string name="btn_reload_text">Обновить БД</string>
-    <string name="btn_search_tooltip">Искать книги</string>
+    <string name="btn_search_text">Искать!</string>
+    <string name="btn_reload_works_text">Обновить произв.</string>
+    <string name="btn_reload_text">Обновить книги</string>
+    <string name="btn_search_tooltip">Запустить поиск</string>
     <string name="add_record">Добавить книгу</string>
     <string name="delete_record">Удалить книгу</string>
     <string name="label_author">Автор</string>
     <string name="label_name">Название</string>
     <string name="label_limit">Макс. записей</string>
     <string name="url_get_info_json">http://www.homelibr.ru/andr/json/</string>
+    <string name="url_get_info_work_json">http://www.homelibr.ru/andr/json/?IsWork=1</string>
     <string name="url_get_info">http://www.homelibr.ru/andr/</string>
+    <string name="toggle_what">Книги</string>
+    <string name="toggle_what1">Произведения</string>
 </resources>

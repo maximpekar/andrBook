@@ -141,7 +141,8 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
 
         @Override
         public Cursor loadInBackground() {
-            Cursor cursor = db.getAllBooks(selection, limit);
+            Cursor cursor;
+            cursor = db.getAllWorks(selection, limit);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
