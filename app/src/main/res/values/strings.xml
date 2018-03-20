@@ -15,5 +15,5 @@
     <string name="url_get_info">http://www.homelibr.ru/andr/</string>
     <string name="toggle_what">Книги</string>
     <string name="toggle_what1">Произведения</string>
-    <string name="label_loading">Идет загрузка данных...</string>
+    <string name="label_loading">Идет загрузка данных...\nЭто может занять несколько минут...\nТак что никуда не уходите...</string>
 </resources>

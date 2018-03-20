@@ -10,6 +10,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -23,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@id/txtAuthor"
                 android:text="@string/label_author"
-                android:textColorLink="@color/colorPrimary" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/txtAuthor"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@id/txtAuthor"
                 android:text="@string/label_name"
-                android:textColorLink="@color/colorPrimary" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/txtName"
@@ -65,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@id/txtAuthor"
                 android:text="@string/label_limit"
-                android:textColorLink="@color/colorPrimary" />
+                android:textColorLink="@color/colorPrimaryDark" />
 
             <EditText
                 android:id="@+id/txtLimit"
@@ -75,15 +76,16 @@
                 android:ems="10"
                 android:inputType="number" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/lblMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@id/txtAuthor"
             android:text="@string/app_name"
-            android:textStyle="bold"
             android:textColor="@color/colorMessage"
-            android:textColorLink="@color/colorPrimary" />
+            android:textColorLink="@color/colorPrimary"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <Button
@@ -131,12 +133,25 @@
         android:layout_height="wrap_content"
         android:textOff="@string/toggle_what"
         android:textOn="@string/toggle_what1"
-        app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintBottom_toBottomOf="@+id/btnReload"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toTopOf="@+id/btnSearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
 </android.support.constraint.ConstraintLayout>

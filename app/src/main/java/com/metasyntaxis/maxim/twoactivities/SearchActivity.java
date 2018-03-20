@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.database.Cursor;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -51,6 +52,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     StringRequest stringRequest, stringRequestW;
     String url, urlW;
     Date start, stop;
+    ProgressBar progress;
     //JsonObjectRequest jsonObjectRequest;
 
     @Override
@@ -71,6 +73,8 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         txtName = (EditText) findViewById(R.id.txtName);
         txtLimit = (EditText) findViewById(R.id.txtLimit);
         lblMessage = (TextView) findViewById(R.id.lblMessage);
+
+        progress = (ProgressBar) findViewById(R.id.progressBar);
 
         db = new DB(this);
         db.open();
@@ -105,6 +109,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                         String s = db.updateAllFromJSON(response.toString());
                         stop = Calendar.getInstance().getTime();
                         String sMess = s + "\n" + start.toString() + " - " + stop.toString();
+                        progress.setVisibility(ProgressBar.INVISIBLE);
                         lblMessage.setText(sMess);
 //                        Toast toast = Toast.makeText(SearchActivity.this,
 //                                s, Toast.LENGTH_SHORT);
@@ -114,6 +119,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 String sMess = error.getMessage();
+                progress.setVisibility(ProgressBar.INVISIBLE);
                 lblMessage.setText(sMess);
 //                Toast toast = Toast.makeText(SearchActivity.this,
 //                        error.getMessage(), Toast.LENGTH_SHORT);
@@ -129,6 +135,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                         stop = Calendar.getInstance().getTime();
                         String sMess = s + "\n" + start.toString() + " - " + stop.toString();
                         lblMessage.setText(sMess);
+                        progress.setVisibility(ProgressBar.INVISIBLE);
 //                        Toast toast = Toast.makeText(SearchActivity.this,
 //                                s, Toast.LENGTH_SHORT);
 //                        toast.show();
@@ -137,6 +144,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 String sMess = error.getMessage();
+                progress.setVisibility(ProgressBar.INVISIBLE);
                 lblMessage.setText(sMess);
 //                Toast toast = Toast.makeText(SearchActivity.this,
 //                        error.getMessage(), Toast.LENGTH_SHORT);
@@ -161,14 +169,14 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             case R.id.btnWorks:
                 lblMessage.setText(getResources().getString(R.string.label_loading));
                 start = Calendar.getInstance().getTime();
+                progress.setVisibility(ProgressBar.VISIBLE);
                 queue.add(stringRequestW);
-
                 break;
             case R.id.btnReload:
                 lblMessage.setText(getResources().getString(R.string.label_loading));
                 start = Calendar.getInstance().getTime();
+                progress.setVisibility(ProgressBar.VISIBLE);
                 queue.add(stringRequest);
-
                 // Это не функция, а полный привет! Осторожнее!
                  // db.clearAll(); // !!!!!!!!!!!!!!!!!!
                  // делаем запрос всех данных из таблицы mytable, получаем Cursor
