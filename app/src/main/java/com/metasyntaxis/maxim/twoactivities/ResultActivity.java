@@ -22,9 +22,10 @@ import android.widget.Toast;
 
 public class ResultActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
-    private static final int CM_DELETE_ID = 1;
+    private static final int CM_DETAIL_ID = 1, CM_SEARCH_ID = 2;
     ListView lvData;
     DB db;
+    boolean isWorks;
     SimpleCursorAdapter scAdapter;
     private static final String GET_DATA_FOR_SEARCH =
             "com.metasyntaxis.maxim.twoactivities.authorforsearch";
@@ -36,6 +37,7 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_result);
 
         mDataForSearch = getIntent().getStringArrayExtra(GET_DATA_FOR_SEARCH);
+        isWorks =(mDataForSearch[3].equals("true"));
 
         // открываем подключение к БД
         db = new DB(this);
@@ -65,10 +67,6 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
 
     // обработка нажатия кнопки
     public void onButtonClick(View view) {
-//         добавляем запись
-//        db.insertBook(new Book("00000000", "111111111"));
-//         получаем новый курсор с данными
-//        getSupportLoaderManager().getLoader(0).forceLoad();
         Toast toast = Toast.makeText(ResultActivity.this,
                 mDataForSearch[0] + " # " + mDataForSearch[1],
                 Toast.LENGTH_SHORT);
@@ -79,18 +77,29 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, CM_DETAIL_ID, 0, R.string.context_menu_details);
+        menu.add(0, CM_SEARCH_ID, 0, R.string.context_menu_search);
     }
 
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == CM_DELETE_ID) {
+        if (item.getItemId() == CM_DETAIL_ID) {
+            String txtDetails = "";
             // получаем из пункта контекстного меню данные по пункту списка
             AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
                     .getMenuInfo();
+            long iData[] = {acmi.id, 0};
+            if(isWorks) {
+                iData[1] = 1;
+            }
+            Intent intent = DetailActivity.newIntent(ResultActivity.this, iData);
+            startActivity(intent);
+//            Toast toast = Toast.makeText(ResultActivity.this,
+//                    txtDetails, Toast.LENGTH_SHORT);
+//            toast.show();
             // извлекаем id записи и удаляем соответствующую запись в БД
-            db.deleteBook(acmi.id);
+            //db.deleteBook(acmi.id);
             // получаем новый курсор с данными
-            getSupportLoaderManager().getLoader(0).forceLoad();
+            //getSupportLoaderManager().getLoader(0).forceLoad();
             return true;
         }
         return super.onContextItemSelected(item);
@@ -108,6 +117,7 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         mcl.setSelection(" author like '%" + mDataForSearch[0].trim() +
                 "%' and name like '%" + mDataForSearch[1].trim() + "%'");
         mcl.setLimit(mDataForSearch[2]);
+        mcl.setType(isWorks);
         return mcl;
     }
 
@@ -125,11 +135,15 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         DB db;
         String selection = "";
         private String limit = "100";
+        private boolean isWorks;
 
         public void setSelection(String s) {
             selection = s;
         }
 
+        public void setType(boolean iW) {
+            isWorks = iW;
+        }
         public void setLimit(String s) {
             limit = s;
         }
@@ -142,7 +156,12 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         @Override
         public Cursor loadInBackground() {
             Cursor cursor;
-            cursor = db.getAllWorks(selection, limit);
+            if (isWorks) {
+                cursor = db.getAllWorks(selection, limit);
+            } else {
+                cursor = db.getAllBooks(selection, limit);
+            }
+
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {

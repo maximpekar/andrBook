@@ -18,10 +18,10 @@ public class DB implements IBooks {
     private static final String DB_TABLE = "tblBook";
     private static final String DB_TABLE_WORK = "tblWork";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_WORKID = "bid";
-    public static final String COLUMN_AUTHOR = "author";
-    public static final String COLUMN_NAME = "name";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_BOOKID = "bid";
+    static final String COLUMN_AUTHOR = "author";
+    static final String COLUMN_NAME = "name";
 
     private static final String DB_CREATE =
             "create table " + DB_TABLE + "(" +
@@ -33,7 +33,7 @@ public class DB implements IBooks {
     private static final String DB_CREATE_WORK =
             "create table " + DB_TABLE_WORK + "(" +
                     COLUMN_ID + " integer primary key autoincrement, " +
-                    COLUMN_WORKID + " integer," +
+                    COLUMN_BOOKID + " integer," +
                     COLUMN_AUTHOR + " text, " +
                     COLUMN_NAME + " text" +
                     ");";
@@ -43,28 +43,28 @@ public class DB implements IBooks {
     private DBHelper mDBHelper;
     private SQLiteDatabase mDB;
 
-    public DB(Context ctx) {
+    DB(Context ctx) {
         mCtx = ctx;
     }
 
     // открыть подключение
-    public void open() {
+    void open() {
         mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
 
     // закрыть подключение
-    public void close() {
+    void close() {
         if (mDBHelper!=null) mDBHelper.close();
     }
 
     // получить все данные из таблицы DB_TABLE
-    public Cursor getAllBooks(String selection, String limit) {
+    Cursor getAllBooks(String selection, String limit) {
         return mDB.query(DB_TABLE, null, selection, null,
                 null, null, null, limit);
     }
 
-    public Cursor getAllWorks(String selection, String limit) {
+    Cursor getAllWorks(String selection, String limit) {
         return mDB.query(DB_TABLE_WORK, null, selection, null,
                 null, null, null, limit);
     }
@@ -92,7 +92,7 @@ public class DB implements IBooks {
             cv.put(COLUMN_ID, id);
         }
         if(bid>0) {
-            cv.put(COLUMN_WORKID, bid);
+            cv.put(COLUMN_BOOKID, bid);
         }
         long rowID = mDB.insert(DB_TABLE_WORK, null, cv);
         return rowID;
@@ -152,10 +152,49 @@ public class DB implements IBooks {
         return s;
     }
 
-    public Book getBook(int id){
+    public String getBookInfo(long id){
+        String s = "";
+        Cursor c = mDB.query(DB_TABLE, null, COLUMN_ID + "=" + id,
+                null, null, null, null);
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex(COLUMN_ID);
+            int nameColIndex = c.getColumnIndex(COLUMN_NAME);
+            int authorColIndex = c.getColumnIndex(COLUMN_AUTHOR);
+            s += "ID = " + c.getInt(idColIndex) +
+                    "\n" + c.getString(nameColIndex) +
+                    "\n" + c.getString(authorColIndex);
+        }
+        return s;
+    }
 
-        Book b = new Book("kjkjk", "oioio", 0);
-        return b;
+    public String getWorksOfBook(long id){
+        String s = "";
+        Cursor c = mDB.query(DB_TABLE_WORK, null, COLUMN_BOOKID + "=" + id,
+                null, null, null, null);
+        if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex(COLUMN_ID);
+            int nameColIndex = c.getColumnIndex(COLUMN_NAME);
+            int authorColIndex = c.getColumnIndex(COLUMN_AUTHOR);
+            do {
+                s += "ID = " + c.getInt(idColIndex) +
+                        ", Название = " + c.getString(nameColIndex) +
+                        ", Авторы = " + c.getString(authorColIndex) + "\n";
+            } while (c.moveToNext());
+        }
+        return s;
+    }
+
+    public String getWorkInfo(long id) {
+        String s = "";
+        Cursor c = mDB.query(DB_TABLE_WORK, null,
+                COLUMN_ID + " = " +  Long.toString(id),
+                null, null, null, null);
+        if(c.moveToFirst()) {
+            s += "ID: " + c.getInt(c.getColumnIndex(COLUMN_ID)) + "\n" +
+                "Название: " + c.getString(c.getColumnIndex(COLUMN_NAME)) + "\n" +
+                "Авторы: " + c.getString(c.getColumnIndex(COLUMN_AUTHOR));
+        }
+        return s;
     }
 
     // класс по созданию и управлению БД
@@ -206,9 +245,11 @@ class Book {
     public void setAuthor(String author) {
         this.Author = author;
     }
+
     public void setName(String name) {
         this.Name = name;
     }
+
     public void setId(int id) {
         this.ID = id;
     }

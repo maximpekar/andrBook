@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 public interface IBooks {
     long insertBook(Book ob);
-    Book getBook(int id);
+    String getBookInfo(long id);
     void updateBook(Book ob, int id);
     void deleteBook(long id);
 

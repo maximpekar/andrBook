@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.database.Cursor;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.Random;
 
@@ -39,8 +40,10 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     final String LOG_TAG = "dbLogs";
     final Random rnd = new Random();
     Button btnSearch, btnWorks, btnReload;
+    ToggleButton tglWorks;
     EditText txtAuthor, txtName, txtLimit;
     DB db;
+    Boolean isWorks = false;
     RequestQueue queue;
     StringRequest stringRequest, stringRequestW;
     String url, urlW;
@@ -57,6 +60,8 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         btnWorks.setOnClickListener(this);
         btnReload = (Button) findViewById(R.id.btnReload);
         btnReload.setOnClickListener(this);
+        tglWorks = (ToggleButton) findViewById(R.id.tglWorks);
+        tglWorks.setOnClickListener(this);
 
         txtAuthor = (EditText) findViewById(R.id.txtAuthor);
         txtName = (EditText) findViewById(R.id.txtName);
@@ -65,7 +70,6 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         db = new DB(this);
         db.open();
         txtLimit.setText("20");
-
 
         queue = Volley.newRequestQueue(this);
 
@@ -129,17 +133,20 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     @Override
     public void onClick(View v) {
 
-         switch (v.getId()) {
+        switch (v.getId()) {
+            case R.id.tglWorks:
+                isWorks = tglWorks.isChecked();
+                break;
             case R.id.btnSearch:
                 String[] strData = {txtAuthor.getText().toString(), txtName.getText().toString(),
-                        txtLimit.getText().toString()};
+                        txtLimit.getText().toString(), isWorks.toString()};
                 Intent intent = ResultActivity.newIntent(SearchActivity.this, strData);
                 startActivity(intent);
                 break;
             case R.id.btnWorks:
                 //Book ob = new Book("Автор" + rnd.nextInt(), "Наименование" + rnd.nextInt(), 0);
-                //long rowID = db.insertBook(ob);
-                //Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+                 //long rowID = db.insertBook(ob);
+                 //Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                 queue.add(stringRequestW);
 
                 break;
@@ -148,41 +155,41 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                 queue.add(stringRequest);
 
                 // Это не функция, а полный привет! Осторожнее!
-                // db.clearAll(); // !!!!!!!!!!!!!!!!!!
-                // делаем запрос всех данных из таблицы mytable, получаем Cursor
-//                Cursor c = db.getAllBooks("", "20");
+                 // db.clearAll(); // !!!!!!!!!!!!!!!!!!
+                 // делаем запрос всех данных из таблицы mytable, получаем Cursor
+//                 Cursor c = db.getAllBooks("", "20");
 //
-//                if (c.moveToFirst()) {
+//                 if (c.moveToFirst()) {
 //
-//                    int idColIndex = c.getColumnIndex("_id");
-//                    int nameColIndex = c.getColumnIndex("name");
-//                    int authorColIndex = c.getColumnIndex("author");
+//                     int idColIndex = c.getColumnIndex("_id");
+//                     int nameColIndex = c.getColumnIndex("name");
+//                     int authorColIndex = c.getColumnIndex("author");
 //
-//                    String s = "";
+//                     String s = "";
 //
-//                    do {
-//                        s += "ID = " + c.getInt(idColIndex) +
-//                                        ", name = " + c.getString(nameColIndex) +
-//                                        ", author = " + c.getString(authorColIndex);
-//                    } while (c.moveToNext());
+//                     do {
+//                         s += "ID = " + c.getInt(idColIndex) +
+//                                         ", name = " + c.getString(nameColIndex) +
+//                                         ", author = " + c.getString(authorColIndex);
+//                     } while (c.moveToNext());
 //
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-//                    builder.setTitle("Важное сообщение!")
-//                            .setMessage(s)
-//                            .setIcon(R.drawable.ic_launcher_background)
-//                            .setCancelable(false)
-//                            .setNegativeButton("ОК, не вопрос",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int id) {
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//                    AlertDialog alert = builder.create();
-//                    alert.show();
+//                     AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+//                     builder.setTitle("Важное сообщение!")
+//                             .setMessage(s)
+//                             .setIcon(R.drawable.ic_launcher_background)
+//                             .setCancelable(false)
+//                             .setNegativeButton("ОК, не вопрос",
+//                                     new DialogInterface.OnClickListener() {
+//                                         public void onClick(DialogInterface dialog, int id) {
+//                                             dialog.cancel();
+//                                         }
+//                                     });
+//                     AlertDialog alert = builder.create();
+//                     alert.show();
 //
-//                } else
-//                    Log.d(LOG_TAG, "0 rows");
-//                c.close();
+//                 } else
+//                     Log.d(LOG_TAG, "0 rows");
+//                 c.close();
 //
                 break;
             default:

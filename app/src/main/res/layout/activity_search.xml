@@ -111,7 +111,7 @@
         android:text="@string/btn_search_text"
         android:textStyle="bold"
         android:tooltipText="@string/btn_search_tooltip"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btnReload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,14 +120,16 @@
 
     <ToggleButton
         android:id="@+id/tglWorks"
-        android:layout_width="132dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/toggle_what"
-        app:layout_constraintBottom_toTopOf="@+id/btnWorks"
+        android:textOff="@string/toggle_what"
+        android:textOn="@string/toggle_what1"
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="@+id/btnReload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.621"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.924" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85" />
 
 </android.support.constraint.ConstraintLayout>

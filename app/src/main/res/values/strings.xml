@@ -5,7 +5,8 @@
     <string name="btn_reload_text">Обновить книги</string>
     <string name="btn_search_tooltip">Запустить поиск</string>
     <string name="add_record">Добавить книгу</string>
-    <string name="delete_record">Удалить книгу</string>
+    <string name="context_menu_details">Посмотреть подробности</string>
+    <string name="context_menu_search">Найти подробности</string>
     <string name="label_author">Автор</string>
     <string name="label_name">Название</string>
     <string name="label_limit">Макс. записей</string>
