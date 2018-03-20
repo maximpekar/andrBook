@@ -11,23 +11,32 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DB implements IBooks {
+public class DB {
 
-    private static final String DB_NAME = "DBBooks";
+    private static final String DB_NAME = "dbBooks";
     private static final int DB_VERSION = 1;
     private static final String DB_TABLE = "tblBook";
     private static final String DB_TABLE_WORK = "tblWork";
 
     private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_BOOKID = "bid";
     static final String COLUMN_AUTHOR = "author";
     static final String COLUMN_NAME = "name";
+    // Only for table tblBook
+    private static final String COLUMN_SERIA = "seria";
+    private static final String COLUMN_YEAR = "year";
+    private static final String COLUMN_PUBLISHER = "publ";
+    // Only for table tblWork
+    private static final String COLUMN_BOOKID = "bid";
+    private static final String COLUMN_TRANSLATOR = "trans";
 
     private static final String DB_CREATE =
             "create table " + DB_TABLE + "(" +
                     COLUMN_ID + " integer primary key autoincrement, " +
                     COLUMN_AUTHOR + " text, " +
-                    COLUMN_NAME + " text" +
+                    COLUMN_NAME + " text, " +
+                    COLUMN_SERIA + " text, " +
+                    COLUMN_YEAR + " integer, " +
+                    COLUMN_PUBLISHER + " text " +
                     ");";
 
     private static final String DB_CREATE_WORK =
@@ -35,6 +44,7 @@ public class DB implements IBooks {
                     COLUMN_ID + " integer primary key autoincrement, " +
                     COLUMN_BOOKID + " integer," +
                     COLUMN_AUTHOR + " text, " +
+                    COLUMN_TRANSLATOR + " text, " +
                     COLUMN_NAME + " text" +
                     ");";
 
@@ -78,6 +88,9 @@ public class DB implements IBooks {
         if(id>0) {
             cv.put(COLUMN_ID, id);
         }
+        cv.put(COLUMN_SERIA, b.getSeria());
+        cv.put(COLUMN_YEAR, b.getYear());
+        cv.put(COLUMN_PUBLISHER, b.getPublisher());
         long rowID = mDB.insert(DB_TABLE, null, cv);
         return rowID;
     }
@@ -94,6 +107,7 @@ public class DB implements IBooks {
         if(bid>0) {
             cv.put(COLUMN_BOOKID, bid);
         }
+        cv.put(COLUMN_TRANSLATOR, w.getTranslator());
         long rowID = mDB.insert(DB_TABLE_WORK, null, cv);
         return rowID;
     }
@@ -122,8 +136,9 @@ public class DB implements IBooks {
             l = jsArr.length();
             for (int i = 0; i<l; i++) {
                 JSONObject row = jsArr.getJSONObject(i);
-                Book b = new Book(row.getString("author"),
-                        row.getString("name"), row.getInt("id"));
+                Book b = new Book(row.getString("author"), row.getString("name"),
+                        row.getInt("id"), row.getString("seria"),
+                        row.getInt("year"), row.getString("publ"));
                 insertBook(b);
             }
             s = "Success: " + l + " was been added";
@@ -141,8 +156,8 @@ public class DB implements IBooks {
             l = jsArr.length();
             for (int i = 0; i<l; i++) {
                 JSONObject row = jsArr.getJSONObject(i);
-                Work w = new Work(row.getString("author"),
-                        row.getString("name"), row.getInt("id"), row.getInt("bid"));
+                Work w = new Work(row.getString("author"), row.getString("name"),
+                        row.getInt("id"), row.getInt("bid"), row.getString("trans"));
                 insertWork(w);
             }
             s = "Success: " + l + " was been added";
@@ -160,9 +175,14 @@ public class DB implements IBooks {
             int idColIndex = c.getColumnIndex(COLUMN_ID);
             int nameColIndex = c.getColumnIndex(COLUMN_NAME);
             int authorColIndex = c.getColumnIndex(COLUMN_AUTHOR);
-            s += "ID = " + c.getInt(idColIndex) +
-                    "\n" + c.getString(nameColIndex) +
-                    "\n" + c.getString(authorColIndex);
+            int seriaColIndex = c.getColumnIndex(COLUMN_SERIA);
+            int yearColIndex = c.getColumnIndex(COLUMN_YEAR);
+            int publisherColIndex = c.getColumnIndex(COLUMN_PUBLISHER);
+            s += "(ID: " + c.getInt(idColIndex) +
+                    ") " + c.getString(nameColIndex) +
+                    "\n" + c.getString(authorColIndex) +
+                    "\nСерия: " + c.getString(seriaColIndex) +
+                    "\n" + c.getString(publisherColIndex) + ", " + c.getInt(yearColIndex);
         }
         return s;
     }
@@ -192,7 +212,8 @@ public class DB implements IBooks {
         if(c.moveToFirst()) {
             s += "ID: " + c.getInt(c.getColumnIndex(COLUMN_ID)) + "\n" +
                 "Название: " + c.getString(c.getColumnIndex(COLUMN_NAME)) + "\n" +
-                "Авторы: " + c.getString(c.getColumnIndex(COLUMN_AUTHOR));
+                "Авторы: " + c.getString(c.getColumnIndex(COLUMN_AUTHOR)) + "\n" +
+                "Перевод: " + c.getString(c.getColumnIndex(COLUMN_TRANSLATOR));
         }
         return s;
     }
@@ -229,6 +250,9 @@ class Book {
     private int ID;
     private String Author;
     private String Name;
+    private String Seria;
+    private int Year;
+    private String Publisher;
 
     public String getAuthor(){
         return this.Author;
@@ -236,6 +260,18 @@ class Book {
 
     public String getName(){
         return this.Name;
+    }
+
+    public String getSeria(){
+        return this.Seria;
+    }
+
+    public int getYear(){
+        return this.Year;
+    }
+
+    public String getPublisher(){
+        return this.Publisher;
     }
 
     public int getId(){
@@ -254,10 +290,13 @@ class Book {
         this.ID = id;
     }
 
-     public Book(String author, String name, int id) {
+     public Book(String author, String name, int id, String seria, int year, String publ) {
         this.ID = id;
         this.Author = author;
         this.Name = name;
+        this.Seria = seria;
+        this.Year = year;
+        this.Publisher = publ;
     }
 
 }
@@ -267,6 +306,7 @@ class Work {
     private int BookID;
     private String Author;
     private String Name;
+    private String Translator;
 
     public String getAuthor(){
         return this.Author;
@@ -284,11 +324,14 @@ class Work {
         return this.BookID;
     }
 
-    public Work(String author, String name, int id, int bid) {
+    public String getTranslator() {return this.Translator;}
+
+    public Work(String author, String name, int id, int bid, String trans) {
         this.ID = id;
         this.Author = author;
         this.Name = name;
         this.BookID = bid;
+        this.Translator = trans;
     }
 
 }

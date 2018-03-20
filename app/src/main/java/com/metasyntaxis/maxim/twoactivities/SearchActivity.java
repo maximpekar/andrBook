@@ -11,9 +11,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.database.Cursor;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import com.android.volley.Request;
@@ -42,11 +44,13 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
     Button btnSearch, btnWorks, btnReload;
     ToggleButton tglWorks;
     EditText txtAuthor, txtName, txtLimit;
+    TextView lblMessage;
     DB db;
     Boolean isWorks = false;
     RequestQueue queue;
     StringRequest stringRequest, stringRequestW;
     String url, urlW;
+    Date start, stop;
     //JsonObjectRequest jsonObjectRequest;
 
     @Override
@@ -66,6 +70,7 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         txtAuthor = (EditText) findViewById(R.id.txtAuthor);
         txtName = (EditText) findViewById(R.id.txtName);
         txtLimit = (EditText) findViewById(R.id.txtLimit);
+        lblMessage = (TextView) findViewById(R.id.lblMessage);
 
         db = new DB(this);
         db.open();
@@ -98,16 +103,21 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                     @Override
                     public void onResponse(String response) {
                         String s = db.updateAllFromJSON(response.toString());
-                        Toast toast = Toast.makeText(SearchActivity.this,
-                                s, Toast.LENGTH_SHORT);
-                        toast.show();
+                        stop = Calendar.getInstance().getTime();
+                        String sMess = s + "\n" + start.toString() + " - " + stop.toString();
+                        lblMessage.setText(sMess);
+//                        Toast toast = Toast.makeText(SearchActivity.this,
+//                                s, Toast.LENGTH_SHORT);
+//                        toast.show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast toast = Toast.makeText(SearchActivity.this,
-                        error.getMessage(), Toast.LENGTH_SHORT);
-                toast.show();
+                String sMess = error.getMessage();
+                lblMessage.setText(sMess);
+//                Toast toast = Toast.makeText(SearchActivity.this,
+//                        error.getMessage(), Toast.LENGTH_SHORT);
+//                toast.show();
             }
         });
 
@@ -116,16 +126,21 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                     @Override
                     public void onResponse(String response) {
                         String s = db.updateAllWorksFromJSON(response.toString());
-                        Toast toast = Toast.makeText(SearchActivity.this,
-                                s, Toast.LENGTH_SHORT);
-                        toast.show();
+                        stop = Calendar.getInstance().getTime();
+                        String sMess = s + "\n" + start.toString() + " - " + stop.toString();
+                        lblMessage.setText(sMess);
+//                        Toast toast = Toast.makeText(SearchActivity.this,
+//                                s, Toast.LENGTH_SHORT);
+//                        toast.show();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast toast = Toast.makeText(SearchActivity.this,
-                        error.getMessage(), Toast.LENGTH_SHORT);
-                toast.show();
+                String sMess = error.getMessage();
+                lblMessage.setText(sMess);
+//                Toast toast = Toast.makeText(SearchActivity.this,
+//                        error.getMessage(), Toast.LENGTH_SHORT);
+//                toast.show();
             }
         });
     }
@@ -144,14 +159,14 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
                 startActivity(intent);
                 break;
             case R.id.btnWorks:
-                //Book ob = new Book("Автор" + rnd.nextInt(), "Наименование" + rnd.nextInt(), 0);
-                 //long rowID = db.insertBook(ob);
-                 //Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+                lblMessage.setText(getResources().getString(R.string.label_loading));
+                start = Calendar.getInstance().getTime();
                 queue.add(stringRequestW);
 
                 break;
             case R.id.btnReload:
-
+                lblMessage.setText(getResources().getString(R.string.label_loading));
+                start = Calendar.getInstance().getTime();
                 queue.add(stringRequest);
 
                 // Это не функция, а полный привет! Осторожнее!

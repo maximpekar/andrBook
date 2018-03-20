@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TwoActivities</string>
+    <string name="app_name">Σπιτική βιβλιοθήκη</string>
     <string name="btn_search_text">Искать!</string>
     <string name="btn_reload_works_text">Обновить произв.</string>
     <string name="btn_reload_text">Обновить книги</string>
@@ -15,4 +15,5 @@
     <string name="url_get_info">http://www.homelibr.ru/andr/</string>
     <string name="toggle_what">Книги</string>
     <string name="toggle_what1">Произведения</string>
+    <string name="label_loading">Идет загрузка данных...</string>
 </resources>
