@@ -11,7 +11,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String GET_DATA_FOR_DETAIL =
             "com.metasyntaxis.maxim.twoactivities.datafordetail";
-    private  long iDetails[];
+    private long iDetails[];
     String txtDetails, txtWorks;
     TextView txtViewDetails, txtViewWorks;
     DB db;
@@ -37,8 +37,6 @@ public class DetailActivity extends AppCompatActivity {
         }
         txtViewDetails.setText(txtDetails);
         txtViewWorks.setText(txtWorks);
-
-
     }
 
 

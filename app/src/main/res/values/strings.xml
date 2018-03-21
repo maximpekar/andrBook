@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Σπιτική βιβλιοθήκη</string>
+    <string name="app_name">Домашняя библиотека</string>
+    <string name="limit_text">20</string>
     <string name="btn_search_text">Искать!</string>
     <string name="btn_reload_works_text">Обновить произв.</string>
     <string name="btn_reload_text">Обновить книги</string>
@@ -15,5 +16,6 @@
     <string name="url_get_info">http://www.homelibr.ru/andr/</string>
     <string name="toggle_what">Книги</string>
     <string name="toggle_what1">Произведения</string>
-    <string name="label_loading">Идет загрузка данных...\nЭто может занять несколько минут...\nТак что никуда не уходите...</string>
+    <string name="label_loading">Получаем данные из сети...\nЭто может занять какое-то время...\nТак что никуда не уходите...</string>
+    <string name="label_response">Данные получены! Идет загрузка данных...\nЭто может занять несколько минут...\nПотерпите, пожалуйста...</string>
 </resources>

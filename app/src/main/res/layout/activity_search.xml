@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -117,12 +118,14 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawablePadding="4dp"
+        android:drawableRight="@drawable/ic_menu_search"
         android:text="@string/btn_search_text"
         android:textStyle="bold"
         android:tooltipText="@string/btn_search_tooltip"
         app:layout_constraintBottom_toBottomOf="@+id/btnReload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85" />

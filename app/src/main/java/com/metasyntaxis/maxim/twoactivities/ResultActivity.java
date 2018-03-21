@@ -13,12 +13,10 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class ResultActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -60,19 +58,19 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
     }
 
     public static Intent newIntent(Context c, String[] strData){
-        Intent intent = new Intent(c, ResultActivity.class);
-        intent.putExtra(GET_DATA_FOR_SEARCH, strData);
+        Intent intent = new Intent(c, ResultActivity.class);    // Объект для общения между формами
+        intent.putExtra(GET_DATA_FOR_SEARCH, strData);          // Берем данные из SearchActivity
         return intent;
     }
 
     // обработка нажатия кнопки
-    public void onButtonClick(View view) {
-        Toast toast = Toast.makeText(ResultActivity.this,
-                mDataForSearch[0] + " # " + mDataForSearch[1],
-                Toast.LENGTH_SHORT);
-        toast.show();
-        toast.setGravity(Gravity.BOTTOM, 1, 2);
-    }
+//    public void onButtonClick(View view) {
+//        Toast toast = Toast.makeText(ResultActivity.this,
+//                mDataForSearch[0] + " # " + mDataForSearch[1],
+//                Toast.LENGTH_SHORT);
+//        toast.show();
+//        toast.setGravity(Gravity.BOTTOM, 1, 2);
+//    }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
@@ -83,23 +81,17 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
 
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == CM_DETAIL_ID) {
-            String txtDetails = "";
             // получаем из пункта контекстного меню данные по пункту списка
-            AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
-                    .getMenuInfo();
+            AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
             long iData[] = {acmi.id, 0};
             if(isWorks) {
                 iData[1] = 1;
             }
             Intent intent = DetailActivity.newIntent(ResultActivity.this, iData);
-            startActivity(intent);
-//            Toast toast = Toast.makeText(ResultActivity.this,
-//                    txtDetails, Toast.LENGTH_SHORT);
-//            toast.show();
-            // извлекаем id записи и удаляем соответствующую запись в БД
-            //db.deleteBook(acmi.id);
-            // получаем новый курсор с данными
-            //getSupportLoaderManager().getLoader(0).forceLoad();
+            startActivity(intent);  // Открываем форму для просмотра подробностей
+            return true;
+        } else if (item.getItemId() == CM_SEARCH_ID) {
+            //
             return true;
         }
         return super.onContextItemSelected(item);
@@ -160,12 +152,6 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
                 cursor = db.getAllWorks(selection, limit);
             } else {
                 cursor = db.getAllBooks(selection, limit);
-            }
-
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
             return cursor;
         }

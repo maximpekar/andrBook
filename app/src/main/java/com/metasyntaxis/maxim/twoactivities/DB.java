@@ -196,9 +196,9 @@ public class DB {
             int nameColIndex = c.getColumnIndex(COLUMN_NAME);
             int authorColIndex = c.getColumnIndex(COLUMN_AUTHOR);
             do {
-                s += "ID = " + c.getInt(idColIndex) +
-                        ", Название = " + c.getString(nameColIndex) +
-                        ", Авторы = " + c.getString(authorColIndex) + "\n";
+                s += "ID: " + c.getInt(idColIndex) +
+                        ", Название: " + c.getString(nameColIndex) +
+                        ", Авторы: " + c.getString(authorColIndex) + "\n";
             } while (c.moveToNext());
         }
         return s;
