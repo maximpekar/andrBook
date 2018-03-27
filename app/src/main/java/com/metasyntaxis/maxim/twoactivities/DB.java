@@ -84,6 +84,22 @@ public class DB {
     }
 
 
+    public long getLastID(int iType) {
+        String sql;
+        long lastId = 0;
+        if(iType == 0) {
+            sql = "select max(" + COLUMN_ID + ") from " + DB_TABLE;
+        } else {
+            sql = "select max(" + COLUMN_ID + ") from " + DB_TABLE_WORK;
+        }
+        Cursor c = mDB.rawQuery(sql, new String[] {});
+        if (c != null && c.moveToFirst()) {
+            lastId = c.getLong(0);
+        }
+        return lastId;
+    }
+
+
     // добавить запись в DB_TABLE
     public long insertBook(Book b) {
         ContentValues cv = new ContentValues();

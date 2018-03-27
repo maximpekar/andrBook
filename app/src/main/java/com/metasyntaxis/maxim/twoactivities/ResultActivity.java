@@ -57,6 +57,7 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         getSupportLoaderManager().initLoader(0, null, this);
     }
 
+
     public static Intent newIntent(Context c, String[] strData){
         Intent intent = new Intent(c, ResultActivity.class);    // Объект для общения между формами
         intent.putExtra(GET_DATA_FOR_SEARCH, strData);          // Берем данные из SearchActivity
@@ -72,12 +73,14 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
 //        toast.setGravity(Gravity.BOTTOM, 1, 2);
 //    }
 
+
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add(0, CM_DETAIL_ID, 0, R.string.context_menu_details);
         menu.add(0, CM_SEARCH_ID, 0, R.string.context_menu_search);
     }
+
 
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getItemId() == CM_DETAIL_ID) {
@@ -97,11 +100,13 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         return super.onContextItemSelected(item);
     }
 
+
     protected void onDestroy() {
         super.onDestroy();
         // закрываем подключение при выходе
         db.close();
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
@@ -113,14 +118,17 @@ public class ResultActivity extends FragmentActivity implements LoaderCallbacks<
         return mcl;
     }
 
+
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         scAdapter.swapCursor(cursor);
     }
 
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
     }
+
 
     static class MyCursorLoader extends CursorLoader {
 

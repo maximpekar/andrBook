@@ -16,6 +16,12 @@
     <string name="url_get_info">http://www.homelibr.ru/andr/</string>
     <string name="toggle_what">Книги</string>
     <string name="toggle_what1">Произведения</string>
-    <string name="label_loading">Получаем данные из сети...\nЭто может занять какое-то время...\nТак что никуда не уходите...</string>
-    <string name="label_response">Данные получены! Идет загрузка данных...\nЭто может занять несколько минут...\nПотерпите, пожалуйста...</string>
+    <string name="label_loading">Получаем данные из сети&#8230;\nЭто может занять какое-то время&#8230;
+        \nТак что никуда не уходите&#8230;</string>
+    <string name="label_response">Данные получены! Идет загрузка данных&#8230;
+        \nЭто может занять несколько минут&#8230;\nПотерпите, пожалуйста&#8230;</string>
+    <string name="mnu_update_books">Обновить книги</string>
+    <string name="mnu_add_books">Добавить книги</string>
+    <string name="mnu_update_works">Обновить произведения</string>
+    <string name="mnu_add_works">Добавить произведения</string>
 </resources>

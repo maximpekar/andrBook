@@ -83,35 +83,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@id/txtAuthor"
-            android:text="@string/app_name"
+            android:text=""
             android:textColor="@color/colorMessage"
             android:textColorLink="@color/colorPrimary"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnReload"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_reload_text"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnWorks"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_reload_works_text"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnSearch"
@@ -123,12 +99,12 @@
         android:text="@string/btn_search_text"
         android:textStyle="bold"
         android:tooltipText="@string/btn_search_tooltip"
-        app:layout_constraintBottom_toBottomOf="@+id/btnReload"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintVertical_bias="0.993" />
 
     <ToggleButton
         android:id="@+id/tglWorks"
@@ -136,13 +112,13 @@
         android:layout_height="wrap_content"
         android:textOff="@string/toggle_what"
         android:textOn="@string/toggle_what1"
-        app:layout_constraintBottom_toBottomOf="@+id/btnReload"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
-        app:layout_constraintHorizontal_bias="0.621"
+        app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintVertical_bias="0.993" />
 
     <ProgressBar
         android:id="@+id/progressBar"
