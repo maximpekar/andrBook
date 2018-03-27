@@ -57,16 +57,19 @@ public class DB {
         mCtx = ctx;
     }
 
+
     // открыть подключение
     void open() {
         mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
 
+
     // закрыть подключение
     void close() {
         if (mDBHelper!=null) mDBHelper.close();
     }
+
 
     // получить все данные из таблицы DB_TABLE
     Cursor getAllBooks(String selection, String limit) {
@@ -74,10 +77,12 @@ public class DB {
                 null, null, null, limit);
     }
 
+
     Cursor getAllWorks(String selection, String limit) {
         return mDB.query(DB_TABLE_WORK, null, selection, null,
                 null, null, null, limit);
     }
+
 
     // добавить запись в DB_TABLE
     public long insertBook(Book b) {
@@ -94,6 +99,28 @@ public class DB {
         long rowID = mDB.insert(DB_TABLE, null, cv);
         return rowID;
     }
+
+
+    public long insertBook(JSONObject jsBook) {
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(COLUMN_AUTHOR, jsBook.getString("author"));
+            cv.put(COLUMN_NAME, jsBook.getString("name"));
+            int id = jsBook.getInt("id");
+            if(id>0) {
+                cv.put(COLUMN_ID, id);
+            }
+            cv.put(COLUMN_SERIA, jsBook.getString("seria"));
+            cv.put(COLUMN_YEAR, jsBook.getString("year"));
+            cv.put(COLUMN_PUBLISHER, jsBook.getString("publ"));
+        } catch (Exception e){
+            return 0;
+        }
+        long rowID = mDB.insert(DB_TABLE, null, cv);
+        return rowID;
+    }
+
+
     // добавить запись в DB_TABLE_WORK
     public long insertWork(Work w) {
         ContentValues cv = new ContentValues();
@@ -112,60 +139,49 @@ public class DB {
         return rowID;
     }
 
+
+    public long insertWork(JSONObject jsWork) {
+        ContentValues cv = new ContentValues();
+        try {
+            cv.put(COLUMN_AUTHOR, jsWork.getString("author"));
+            cv.put(COLUMN_NAME, jsWork.getString("name"));
+            cv.put(COLUMN_TRANSLATOR, jsWork.getString("trans"));
+            int id = jsWork.getInt("id");
+            int bid = jsWork.getInt("bid");
+            if(id>0) {
+                cv.put(COLUMN_ID, id);
+            }
+            if(bid>0) {
+                cv.put(COLUMN_BOOKID, bid);
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        long rowID = mDB.insert(DB_TABLE_WORK, null, cv);
+        return rowID;
+    }
+
+
     // удалить запись из DB_TABLE
     public void deleteBook(long id) {
         mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
     }
 
+
     public void clearAll() {
         mDB.delete(DB_TABLE, "", null);
     }
+
 
     public void clearAllWorks() {
         mDB.delete(DB_TABLE_WORK, "", null);
     }
 
+
     public void updateBook(Book b, int id){
 
     }
-    public String updateAllFromJSON(String jsString) {
-        String s = "--"; int l;
-        clearAll();
-        try {
-            JSONArray jsArr = new JSONArray(jsString);
-            l = jsArr.length();
-            for (int i = 0; i<l; i++) {
-                JSONObject row = jsArr.getJSONObject(i);
-                Book b = new Book(row.getString("author"), row.getString("name"),
-                        row.getInt("id"), row.getString("seria"),
-                        row.getInt("year"), row.getString("publ"));
-                insertBook(b);
-            }
-            s = "Success: " + l + " was been added";
-        } catch (JSONException e) {
-            s = e.getMessage();
-        }
-        return s;
-    }
 
-    public String updateAllWorksFromJSON(String jsString) {
-        String s = "--"; int l;
-        clearAllWorks();
-        try {
-            JSONArray jsArr = new JSONArray(jsString);
-            l = jsArr.length();
-            for (int i = 0; i<l; i++) {
-                JSONObject row = jsArr.getJSONObject(i);
-                Work w = new Work(row.getString("author"), row.getString("name"),
-                        row.getInt("id"), row.getInt("bid"), row.getString("trans"));
-                insertWork(w);
-            }
-            s = "Success: " + l + " was been added";
-        } catch (JSONException e) {
-            s = e.getMessage();
-        }
-        return s;
-    }
 
     public String getBookInfo(long id){
         String s = "";
@@ -187,6 +203,7 @@ public class DB {
         return s;
     }
 
+
     public String getWorksOfBook(long id){
         String s = "";
         Cursor c = mDB.query(DB_TABLE_WORK, null, COLUMN_BOOKID + "=" + id,
@@ -203,6 +220,7 @@ public class DB {
         }
         return s;
     }
+
 
     public String getWorkInfo(long id) {
         String s = "";

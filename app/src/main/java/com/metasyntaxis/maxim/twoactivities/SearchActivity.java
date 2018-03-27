@@ -26,6 +26,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class SearchActivity extends AppCompatActivity implements OnClickListener{
 
     final String LOG_TAG = "dbLogs";
@@ -71,13 +74,22 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
 
         hndl = new Handler() {
             public void handleMessage(Message msg) {
-                afterUpdate(msg.getData().getString("s"), 1);
+                String s = msg.getData().getString("s");
+                int iProgress = msg.getData().getInt("iProgress");
+                if(iProgress>99) {
+                    afterUpdate(s, 1);
+                } else {
+                    progress.setProgress(iProgress);
+                    progress.setSecondaryProgress(iProgress + 5);
+                    lblMessage.setText(getResources().getString(R.string.label_response) +
+                    "\n" + s);
+                }
             };
         };
 
         queue = Volley.newRequestQueue(this);
 
-        url = getResources().getString(R.string.url_get_info_json); //"http://www.homelibr.ru/andr/";
+        url = getResources().getString(R.string.url_get_info_json);
         urlW = getResources().getString(R.string.url_get_info_work_json);
 
         stringRequest = new StringRequest(Request.Method.GET, url,
@@ -114,9 +126,11 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
             }
         });
     }
+
     // Класс для загрузки строки ДжСона в БД, основная функция работает долго, поэтому
     public class RunThread implements Runnable { // эта штука будет запускаться в отдельном потоке
-        private String strResp; // Для этого необходимо передать в поток большую строку ДжСон
+        private String strResp; // Для этого необходимо раздербанить response ДжСон,
+        private String strBooks;// передать в поток большую строку ДжСон
         private int iType;      // и тип загружаемой таблицы
         public RunThread(String s, int i) {
             this.strResp = s;
@@ -126,17 +140,68 @@ public class SearchActivity extends AppCompatActivity implements OnClickListener
         public void run() {
             //Message msg = handler.obtainMessage();
             String s;
-            if(iType==0) {
-                s = db.updateAllFromJSON(strResp);      // Загрузка книг
-            } else {
-                s = db.updateAllWorksFromJSON(strResp); // Загрузка произведений
+            JSONObject jsObj;
+            JSONArray data;
+            int i, l;
+            if(iType==0) {      // Загрузка книг
+                try {
+//                    jsObj = new JSONObject(strResp);
+                    data = new JSONArray(strResp);
+                } catch (Exception e) {
+                    s = e.getMessage();
+                    data = new JSONArray();
+                }
+                l = data.length();
+                db.clearAll();
+//                    data = jsObj.getJSONArray("data");
+                try {
+                    for (i = 0; i < l; i++) {
+                        db.insertBook(data.getJSONObject(i));
+                        if (i % 1000 == 0) {
+                            s = "Загружено " + i + " записей";
+                            sendMessToThread(hndl, s, i*100/l);
+                        }
+                    }
+                } catch (Exception e) {
+                    s = e.getMessage();
+                } finally {
+                    s = "Загрузка завершена: " + l + " записей";
+                }
+            } else { // Загрузка произведений
+                try {
+                    data = new JSONArray(strResp);
+                } catch (Exception e) {
+                    s = e.getMessage();
+                    data = new JSONArray();
+                }
+                l = data.length();
+                db.clearAllWorks();
+//                    data = jsObj.getJSONArray("data");
+                try {
+                    for (i = 0; i < l; i++) {
+                        db.insertWork(data.getJSONObject(i));
+                        if (i % 1000 == 0) {
+                            s = "Загружено " + i + " записей";
+                            sendMessToThread(hndl, s, i*100/l);
+                        }
+                    }
+                } catch (Exception e) {
+                    s = e.getMessage();
+                } finally {
+                    s = "Загрузка завершена: " + l + " записей";
+                }
             }
-            Message msg = hndl.obtainMessage();         // Сообщение, чтобы сообщить результат
-            Bundle bundle = new Bundle();
-            bundle.putString("s", s);                   // Запаковывыем строку для передачи
-            msg.setData(bundle);                        // и помещаем в сообщение.
-            hndl.sendMessage(msg);                      // Сообщение передается объектом Handler
+            sendMessToThread(hndl, s, 100);
         }
+    }
+
+    public void sendMessToThread(Handler hndl, String strMsg, int iProgress) {
+        Message msg = hndl.obtainMessage();         // Сообщение, чтобы сообщить результат
+        Bundle bundle = new Bundle();               //
+        bundle.putString("s", strMsg);              // Запаковывыем строку для передачи
+        bundle.putInt("iProgress", iProgress);      // и число: 1, если все сделали
+        msg.setData(bundle);                        // и помещаем в сообщение.
+        hndl.sendMessage(msg);                      // Сообщение передается объектом Handler
     }
 
     public void beforUpdate() { //  Прежде, чем запустить длинный процесс, надо подготовиться
